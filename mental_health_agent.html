@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindBridge — Mental Health Awareness & Suicide Prevention Agent</title>
+
+  <!-- ─── IBM watsonx Orchestrate Agent Config (must be in <head>) ── -->
+  <script>
+    window.wxOConfiguration = {
+      orchestrationID: "f6be8f3b04eb44c6af56921bdf117162_8bc5eaa9-c5b3-4ddb-bee7-efc00a9ac12b",
+      hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
+      rootElementID: "root",
+      deploymentPlatform: "ibmcloud",
+      crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/f6be8f3b04eb44c6af56921bdf117162:8bc5eaa9-c5b3-4ddb-bee7-efc00a9ac12b::",
+      chatOptions: {
+          agentId: "ae38731f-4286-4b2c-ad25-531d88265984",
+      }
+    };
+    setTimeout(function () {
+      const script = document.createElement('script');
+      script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+      script.addEventListener('load', function () {
+          wxoLoader.init();
+      });
+      document.head.appendChild(script);
+    }, 0);
+  </script>
+  <style>
+    /* ─── Reset & Base ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #f4f6fb;
+      --surface:     #ffffff;
+      --card:        #f0f4ff;
+      --border:      #dde3f0;
+      --text:        #1a1f36;
+      --muted:       #5a6480;
+      --accent:      #4f6ef7;
+      --accent-dark: #3651d4;
+      --green:       #22c55e;
+      --amber:       #f59e0b;
+      --red:         #ef4444;
+      --purple:      #7c3aed;
+      --teal:        #0d9488;
+      --radius:      14px;
+      --shadow:      0 2px 16px rgba(79,110,247,.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── Nav ────────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .nav-logo svg { flex-shrink: 0; }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600 !important;
+      transition: background .2s !important;
+    }
+
+    .nav-cta:hover { background: var(--accent-dark) !important; }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      max-width: 900px;
+      margin: 64px auto 0;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #eef2ff;
+      color: var(--accent);
+      border: 1px solid #c7d2fe;
+      border-radius: 30px;
+      padding: 5px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -.5px;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 13px 30px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      padding: 11px 28px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-outline:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+
+    /* ─── Crisis Banner ──────────────────────────────────────────── */
+    .crisis-banner {
+      max-width: 900px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+
+    .crisis-banner-inner {
+      background: linear-gradient(135deg, #fef2f2 0%, #fff7ed 100%);
+      border: 1.5px solid #fca5a5;
+      border-radius: var(--radius);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .crisis-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .crisis-text strong { color: var(--red); font-size: 15px; }
+    .crisis-text p { color: #7f1d1d; font-size: 13px; margin-top: 2px; }
+
+    .crisis-numbers {
+      margin-left: auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .crisis-pill {
+      background: var(--red);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .crisis-pill.secondary {
+      background: transparent;
+      color: var(--red);
+      border: 2px solid var(--red);
+    }
+
+    /* ─── Stats ──────────────────────────────────────────────────── */
+    .stats {
+      max-width: 900px;
+      margin: 56px auto 0;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ─── Section layout ─────────────────────────────────────────── */
+    section {
+      max-width: 900px;
+      margin: 64px auto 0;
+      padding: 0 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: var(--accent);
+      border-radius: 30px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(22px, 3.5vw, 34px);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ─── Feature Cards ──────────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px 22px;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .fi-blue   { background: #dbeafe; }
+    .fi-green  { background: #dcfce7; }
+    .fi-purple { background: #ede9fe; }
+    .fi-amber  { background: #fef3c7; }
+    .fi-teal   { background: #ccfbf1; }
+    .fi-red    { background: #fee2e2; }
+
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ─── Mood Tracker ───────────────────────────────────────────── */
+    .mood-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+
+    .mood-section h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .mood-section > p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+    .mood-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .mood-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: all .2s;
+      min-width: 72px;
+    }
+
+    .mood-btn:hover { border-color: var(--accent); background: #eef2ff; }
+    .mood-btn.active { border-color: var(--accent); background: #eef2ff; }
+
+    .mood-emoji { font-size: 26px; }
+    .mood-label { font-size: 11px; font-weight: 600; color: var(--muted); }
+
+    .mood-response {
+      background: #eef2ff;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text);
+      display: none;
+    }
+
+    .mood-response.show { display: block; }
+
+    /* ─── Warning Signs ──────────────────────────────────────────── */
+    .warning-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .warning-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .warning-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    .warning-item p { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+    /* ─── Resources ──────────────────────────────────────────────── */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .resource-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .resource-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .resource-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .rb-red    { background: #fee2e2; }
+    .rb-blue   { background: #dbeafe; }
+    .rb-green  { background: #dcfce7; }
+    .rb-purple { background: #ede9fe; }
+
+    .resource-card h4 { font-size: 15px; font-weight: 700; }
+    .resource-card p  { font-size: 13px; color: var(--muted); }
+
+    .resource-hotline {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    /* ─── Coping Techniques ──────────────────────────────────────── */
+    .coping-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .coping-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .coping-header {
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ch-teal   { background: #ccfbf1; color: var(--teal); }
+    .ch-purple { background: #ede9fe; color: var(--purple); }
+    .ch-blue   { background: #dbeafe; color: var(--accent); }
+    .ch-amber  { background: #fef3c7; color: #92400e; }
+
+    .coping-body {
+      padding: 14px 20px;
+    }
+
+    .coping-body ol, .coping-body ul {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .coping-body li { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+    /* ─── Chat Section ───────────────────────────────────────────── */
+    .chat-section {
+      background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+      border: 1px solid #c7d2fe;
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      text-align: center;
+    }
+
+    .chat-section h3 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .chat-section p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 520px;
+      margin: 0 auto 24px;
+    }
+
+    .ai-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .ai-pulse {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(1.3); }
+    }
+
+    /* ─── Disclaimer ─────────────────────────────────────────────── */
+    .disclaimer {
+      max-width: 900px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+
+    .disclaimer-inner {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      font-size: 13px;
+      color: #78350f;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .disclaimer-inner svg { flex-shrink: 0; margin-top: 2px; }
+
+    /* ─── Footer ─────────────────────────────────────────────────── */
+    footer {
+      max-width: 900px;
+      margin: 56px auto 0;
+      padding: 24px 24px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 12px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 15px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a { font-size: 13px; color: var(--muted); }
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy { font-size: 12px; color: var(--muted); text-align: right; }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .hero, section, .crisis-banner, .stats, .disclaimer, footer { padding: 0 16px; }
+      .chat-section { padding: 24px 18px; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-copy { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Navigation ─────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="14" fill="#4f6ef7" opacity=".12"/>
+      <path d="M14 7c-3.866 0-7 3.134-7 7 0 2.21 1.02 4.183 2.616 5.49L9 21h10l-.616-1.51A6.966 6.966 0 0021 14c0-3.866-3.134-7-7-7z" fill="#4f6ef7"/>
+      <rect x="11" y="13" width="6" height="1.5" rx=".75" fill="#fff"/>
+      <rect x="11" y="15.5" width="4" height="1.5" rx=".75" fill="#fff"/>
+    </svg>
+    MindBridge
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#mood">Mood Check</a></li>
+    <li><a href="#warning-signs">Warning Signs</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#coping">Coping Tools</a></li>
+    <li><a href="#chat" class="nav-cta">Talk to Agent</a></li>
+  </ul>
+</nav>
+
+<!-- ─── Hero ───────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-badge">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <circle cx="7" cy="7" r="7" fill="#4f6ef7"/>
+      <path d="M4 7l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    AI-Powered Mental Health Support
+  </div>
+  <h1>You Are Not Alone.<br/><span>Help Is Here For You.</span></h1>
+  <p>MindBridge is an empathetic, AI-powered companion offering mental health awareness, crisis support, coping strategies, and a safe space to express your feelings — 24 hours a day.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('chat').scrollIntoView({behavior:'smooth'})">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 3a1 1 0 011-1h10a1 1 0 011 1v7a1 1 0 01-1 1H9l-3 2v-2H3a1 1 0 01-1-1V3z" fill="#fff"/>
+      </svg>
+      Chat with AI Agent
+    </button>
+    <button class="btn-outline" onclick="document.getElementById('resources').scrollIntoView({behavior:'smooth'})">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="#4f6ef7" stroke-width="1.5"/>
+        <path d="M8 7v5M8 5v1" stroke="#4f6ef7" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Crisis Resources
+    </button>
+  </div>
+</div>
+
+<!-- ─── Crisis Banner ──────────────────────────────────────────── -->
+<div class="crisis-banner">
+  <div class="crisis-banner-inner">
+    <div class="crisis-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 3L2 17h16L10 3z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M10 9v4M10 14.5v.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="crisis-text">
+      <strong>If you are in immediate danger, please call emergency services now.</strong>
+      <p>You are not alone — crisis counselors are available 24/7, completely free and confidential.</p>
+    </div>
+    <div class="crisis-numbers">
+      <span class="crisis-pill">🇺🇸 988 Suicide & Crisis Lifeline</span>
+      <span class="crisis-pill secondary">🌍 Crisis Text Line: Text HOME to 741741</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Stats ──────────────────────────────────────────────────── -->
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-number">1 in 5</div>
+    <div class="stat-label">adults experience a mental health condition each year</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">700M+</div>
+    <div class="stat-label">people worldwide live with mental health disorders</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">90%</div>
+    <div class="stat-label">of suicide deaths involve a treatable mental health condition</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">24/7</div>
+    <div class="stat-label">our AI agent is here for you, day or night</div>
+  </div>
+</div>
+
+<!-- ─── Features ──────────────────────────────────────────────── -->
+<section id="features">
+  <div class="section-header">
+    <div class="section-tag">What We Offer</div>
+    <h2>Compassionate AI Support</h2>
+    <p>MindBridge combines empathetic conversation with trusted mental health resources to provide meaningful, around-the-clock support.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon fi-blue">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M3 5a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2h-5l-4 3v-3H5a2 2 0 01-2-2V5z" stroke="#4f6ef7" stroke-width="1.7"/>
+        </svg>
+      </div>
+      <h3>Empathetic Conversation</h3>
+      <p>Talk freely without fear of judgment. Our AI agent listens with compassion and responds with care tailored to your emotional state.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-red">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M11 20s-8-5.5-8-11a8 8 0 0116 0c0 5.5-8 11-8 11z" stroke="#ef4444" stroke-width="1.7"/>
+        </svg>
+      </div>
+      <h3>Crisis Detection & Escalation</h3>
+      <p>When critical distress signals are detected, the agent immediately surfaces emergency contacts and guides you to professional help.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect x="3" y="3" width="16" height="16" rx="3" stroke="#22c55e" stroke-width="1.7"/>
+          <path d="M7 11l3 3 5-5" stroke="#22c55e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Evidence-Based Coping Tools</h3>
+      <p>Access guided breathing exercises, grounding techniques, CBT-inspired prompts, and mindfulness practices on demand.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-purple">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="8" r="4" stroke="#7c3aed" stroke-width="1.7"/>
+          <path d="M4 19c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="#7c3aed" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Mood Tracking</h3>
+      <p>Check in with yourself daily. The agent acknowledges your current emotional state and offers personalised responses and exercises.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-amber">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="11" r="8" stroke="#f59e0b" stroke-width="1.7"/>
+          <path d="M11 7v4l2.5 2.5" stroke="#f59e0b" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>24/7 Availability</h3>
+      <p>Mental health challenges don't follow a schedule. MindBridge is always available — nights, weekends, and holidays.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-teal">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M6 9h10M6 13h6" stroke="#0d9488" stroke-width="1.7" stroke-linecap="round"/>
+          <rect x="3" y="4" width="16" height="14" rx="3" stroke="#0d9488" stroke-width="1.7"/>
+        </svg>
+      </div>
+      <h3>Psychoeducation</h3>
+      <p>Learn about depression, anxiety, PTSD, and more through clear, stigma-free explanations that help you understand what you're experiencing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Mood Tracker ───────────────────────────────────────────── -->
+<section id="mood">
+  <div class="section-header">
+    <div class="section-tag">Self-Check</div>
+    <h2>How Are You Feeling Right Now?</h2>
+    <p>Select your current mood — the agent will offer a personalised response and suggest next steps.</p>
+  </div>
+  <div class="mood-section">
+    <h3>Today's Mood Check-In</h3>
+    <p>Choose the emotion that best describes how you feel at this moment. There are no wrong answers.</p>
+    <div class="mood-grid" id="moodGrid">
+      <button class="mood-btn" data-mood="great"     onclick="selectMood(this)"><span class="mood-emoji">😊</span><span class="mood-label">Great</span></button>
+      <button class="mood-btn" data-mood="okay"      onclick="selectMood(this)"><span class="mood-emoji">🙂</span><span class="mood-label">Okay</span></button>
+      <button class="mood-btn" data-mood="anxious"   onclick="selectMood(this)"><span class="mood-emoji">😰</span><span class="mood-label">Anxious</span></button>
+      <button class="mood-btn" data-mood="sad"       onclick="selectMood(this)"><span class="mood-emoji">😢</span><span class="mood-label">Sad</span></button>
+      <button class="mood-btn" data-mood="angry"     onclick="selectMood(this)"><span class="mood-emoji">😠</span><span class="mood-label">Angry</span></button>
+      <button class="mood-btn" data-mood="numb"      onclick="selectMood(this)"><span class="mood-emoji">😶</span><span class="mood-label">Numb</span></button>
+      <button class="mood-btn" data-mood="hopeless"  onclick="selectMood(this)"><span class="mood-emoji">😔</span><span class="mood-label">Hopeless</span></button>
+      <button class="mood-btn" data-mood="overwhelmed" onclick="selectMood(this)"><span class="mood-emoji">🤯</span><span class="mood-label">Overwhelmed</span></button>
+    </div>
+    <div class="mood-response" id="moodResponse"></div>
+  </div>
+</section>
+
+<!-- ─── Warning Signs ─────────────────────────────────────────── -->
+<section id="warning-signs">
+  <div class="section-header">
+    <div class="section-tag">Know the Signs</div>
+    <h2>Warning Signs of Suicide Risk</h2>
+    <p>Recognising these signs in yourself or someone you love is the first step toward getting help. If you notice these, reach out immediately.</p>
+  </div>
+  <div class="warning-grid">
+    <div class="warning-item"><div class="warning-dot"></div><p>Talking about wanting to die or to kill oneself</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Looking for ways to kill oneself — searching online or acquiring means</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Talking about feeling hopeless or having no reason to live</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Talking about feeling trapped or being in unbearable pain</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Increasing use of alcohol or drugs</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Withdrawing from friends, family, and community</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Extreme mood swings or sudden calmness after deep distress</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Giving away prized possessions</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Sleeping too little or too much</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Displaying extreme agitation or reckless behaviour</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Saying goodbyes as if they will not be seen again</p></div>
+    <div class="warning-item"><div class="warning-dot"></div><p>Dramatic changes in behaviour, appearance, or appetite</p></div>
+  </div>
+</section>
+
+<!-- ─── Resources ─────────────────────────────────────────────── -->
+<section id="resources">
+  <div class="section-header">
+    <div class="section-tag">Get Help Now</div>
+    <h2>Crisis & Support Resources</h2>
+    <p>Free, confidential help is one call or text away. Reach out — speaking up is a sign of strength.</p>
+  </div>
+  <div class="resources-grid">
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-badge rb-red">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 3a2 2 0 012-2h2l1 4-2 1a12 12 0 005 5l1-2 4 1v2a2 2 0 01-2 2C7.163 15 3 10.837 3 6V3z" stroke="#ef4444" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h4>988 Suicide & Crisis Lifeline</h4>
+      </div>
+      <div class="resource-hotline">Call or Text 988</div>
+      <p>Free, confidential support for people in distress — 24/7, 365 days a year. Available in the USA.</p>
+    </div>
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-badge rb-blue">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="2" y="3" width="14" height="10" rx="2" stroke="#4f6ef7" stroke-width="1.5"/>
+            <path d="M6 16h6" stroke="#4f6ef7" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h4>Crisis Text Line</h4>
+      </div>
+      <div class="resource-hotline">Text HOME to 741741</div>
+      <p>Text-based crisis support for anyone in the USA, UK, Canada, and Ireland. Staffed 24/7.</p>
+    </div>
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-badge rb-green">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="7" stroke="#22c55e" stroke-width="1.5"/>
+            <path d="M9 6v4l2 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h4>International Association for Suicide Prevention</h4>
+      </div>
+      <div class="resource-hotline" style="font-size:14px;"><a href="https://www.iasp.info/resources/Crisis_Centres/" target="_blank" rel="noopener">Find a Local Crisis Centre →</a></div>
+      <p>Locate crisis centres and hotlines available in your country worldwide.</p>
+    </div>
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-badge rb-purple">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 2C5.134 2 2 5.134 2 9c0 2.21 1.02 4.183 2.616 5.49L4 16h10l-.616-1.51A6.966 6.966 0 0016 9c0-3.866-3.134-7-7-7z" stroke="#7c3aed" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h4>NAMI Helpline</h4>
+      </div>
+      <div class="resource-hotline">1-800-950-NAMI</div>
+      <p>National Alliance on Mental Illness — free mental health information, crisis support and referrals.</p>
+    </div>
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-badge rb-red">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 16s-7-4.5-7-9A7 7 0 0116 7c0 4.5-7 9-7 9z" stroke="#ef4444" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h4>Veterans Crisis Line</h4>
+      </div>
+      <div class="resource-hotline">Call 988, Press 1</div>
+      <p>Dedicated crisis support for US military veterans, service members, and their families.</p>
+    </div>
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-badge rb-blue">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="2" y="2" width="14" height="14" rx="3" stroke="#4f6ef7" stroke-width="1.5"/>
+            <path d="M6 9h6M9 6v6" stroke="#4f6ef7" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h4>SAMHSA National Helpline</h4>
+      </div>
+      <div class="resource-hotline">1-800-662-4357</div>
+      <p>Free, confidential treatment referrals for mental health and substance use disorders — 24/7.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Coping Techniques ──────────────────────────────────────── -->
+<section id="coping">
+  <div class="section-header">
+    <div class="section-tag">Self-Help Tools</div>
+    <h2>Evidence-Based Coping Techniques</h2>
+    <p>These strategies are based on clinical best practices. Use them to manage stress, anxiety, and overwhelming emotions.</p>
+  </div>
+  <div class="coping-grid">
+    <div class="coping-card">
+      <div class="coping-header ch-teal">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <circle cx="9" cy="9" r="7" stroke="#0d9488" stroke-width="1.5"/>
+          <path d="M9 6v3l2 2" stroke="#0d9488" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Box Breathing (4-4-4-4)
+      </div>
+      <div class="coping-body">
+        <ol>
+          <li>Inhale slowly through your nose for <strong>4 seconds</strong></li>
+          <li>Hold your breath for <strong>4 seconds</strong></li>
+          <li>Exhale slowly through your mouth for <strong>4 seconds</strong></li>
+          <li>Hold for <strong>4 seconds</strong></li>
+          <li>Repeat 4–6 times until calm returns</li>
+        </ol>
+      </div>
+    </div>
+    <div class="coping-card">
+      <div class="coping-header ch-purple">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2l1.5 4.5H15l-3.75 2.75 1.5 4.5L9 11.5l-3.75 2.25 1.5-4.5L3 6.5h4.5L9 2z" stroke="#7c3aed" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        5-4-3-2-1 Grounding
+      </div>
+      <div class="coping-body">
+        <ul>
+          <li>Name <strong>5 things</strong> you can see</li>
+          <li>Name <strong>4 things</strong> you can physically feel</li>
+          <li>Name <strong>3 things</strong> you can hear</li>
+          <li>Name <strong>2 things</strong> you can smell</li>
+          <li>Name <strong>1 thing</strong> you can taste</li>
+        </ul>
+      </div>
+    </div>
+    <div class="coping-card">
+      <div class="coping-header ch-blue">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="3" y="3" width="12" height="12" rx="2" stroke="#4f6ef7" stroke-width="1.5"/>
+          <path d="M6 9h6M9 6v6" stroke="#4f6ef7" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Thought Reframing (CBT)
+      </div>
+      <div class="coping-body">
+        <ol>
+          <li>Write down the negative thought</li>
+          <li>Identify the emotion it triggers</li>
+          <li>Find evidence for and against it</li>
+          <li>Write a more balanced, realistic thought</li>
+          <li>Notice how your mood shifts</li>
+        </ol>
+      </div>
+    </div>
+    <div class="coping-card">
+      <div class="coping-header ch-amber">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2C5.134 2 2 5.134 2 9s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7z" stroke="#92400e" stroke-width="1.5"/>
+          <path d="M9 6c0 2-2 3-2 5h4c0-2-2-3-2-5z" stroke="#92400e" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        Progressive Muscle Relaxation
+      </div>
+      <div class="coping-body">
+        <ol>
+          <li>Sit or lie in a comfortable position</li>
+          <li>Tense feet and calves for 5 seconds, then release</li>
+          <li>Work up through thighs, abdomen, hands, arms, shoulders</li>
+          <li>Scrunch your face muscles for 5 seconds, release</li>
+          <li>Notice the deep relaxation throughout your body</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── AI Chat Section ────────────────────────────────────────── -->
+<section id="chat">
+  <div class="chat-section">
+    <div class="ai-pill">
+      <div class="ai-pulse"></div>
+      AI Agent Online
+    </div>
+    <h3>Talk to MindBridge AI Agent</h3>
+    <p>Your conversation is private and judgment-free. The agent is trained to listen, support, and guide you toward the right resources. Start whenever you are ready.</p>
+    <button class="btn-primary" style="margin: 0 auto;" onclick="document.getElementById('wxo-chat-launcher')?.click()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 3a1 1 0 011-1h10a1 1 0 011 1v7a1 1 0 01-1 1H9l-3 2v-2H3a1 1 0 01-1-1V3z" fill="#fff"/>
+      </svg>
+      Open Chat Window
+    </button>
+    <p style="margin-top:16px; font-size:13px;">
+      Not sure what to say? Try: <em>"I've been feeling anxious lately"</em> or <em>"I need help coping with stress"</em>
+    </p>
+  </div>
+</section>
+
+<!-- ─── Disclaimer ─────────────────────────────────────────────── -->
+<div class="disclaimer">
+  <div class="disclaimer-inner">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0">
+      <path d="M9 2L1.5 16h15L9 2z" stroke="#d97706" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M9 8v4M9 13.5v.5" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <span><strong>Important Disclaimer:</strong> MindBridge is an AI-powered awareness and support tool and is <strong>not</strong> a substitute for professional mental health care. It does not provide diagnosis, therapy, or medical advice. If you are in crisis or experiencing a psychiatric emergency, please call <strong>988</strong> (USA) or your local emergency services immediately. Always consult a qualified mental health professional for personalised care.</span>
+  </div>
+</div>
+
+<!-- ─── Footer ─────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">
+    <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="14" fill="#4f6ef7" opacity=".12"/>
+      <path d="M14 7c-3.866 0-7 3.134-7 7 0 2.21 1.02 4.183 2.616 5.49L9 21h10l-.616-1.51A6.966 6.966 0 0021 14c0-3.866-3.134-7-7-7z" fill="#4f6ef7"/>
+    </svg>
+    MindBridge
+  </div>
+  <ul class="footer-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#warning-signs">Warning Signs</a></li>
+    <li><a href="#coping">Coping Tools</a></li>
+    <li><a href="#chat">Chat Agent</a></li>
+  </ul>
+  <div class="footer-copy">
+    &copy; 2025 MindBridge &mdash; Mental Health Awareness<br/>
+    <span style="font-size:11px;">Powered by IBM watsonx Orchestrate AI</span>
+  </div>
+</footer>
+
+<!-- ─── Mood Tracker Script ────────────────────────────────────── -->
+<script>
+  var moodMessages = {
+    great:       "That's wonderful to hear! 😊 Keep nurturing that positive energy. Consider journaling what went well today to reinforce these feelings.",
+    okay:        "It's perfectly okay to feel just okay. 🙂 Small acts of self-care can help elevate your mood — try a short walk, a favourite drink, or a few minutes of music you enjoy.",
+    anxious:     "Anxiety is tough, but manageable. 😰 Try the <strong>Box Breathing</strong> exercise above — inhale for 4 counts, hold 4, exhale 4, hold 4. You can also chat with our AI agent for more guided support.",
+    sad:         "I'm sorry you're feeling sad right now. 😢 It's okay — all emotions are valid. Be gentle with yourself. Reach out to someone you trust, or start a conversation with our AI agent. You don't have to carry this alone.",
+    angry:       "Anger is a valid emotion. 😠 Try stepping away from the situation briefly. Progressive Muscle Relaxation (see above) can help release physical tension. Channel the energy into movement if you can.",
+    numb:        "Feeling numb can be disorienting and is often your mind's way of protecting itself. 😶 Try engaging your senses gently — hold something warm, listen to music, or step outside. Our AI agent is here to talk.",
+    hopeless:    "Feeling hopeless is one of the hardest experiences, and we want you to know: <strong>things can get better with the right support.</strong> 😔 Please talk to our AI agent or call <strong>988</strong> now. You matter.",
+    overwhelmed: "When everything feels like too much, take one breath at a time. 🤯 Break the moment into small steps. Try the 5-4-3-2-1 Grounding technique above, or open the AI chat for immediate guidance."
+  };
+
+  function selectMood(btn) {
+    document.querySelectorAll('.mood-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var resp = document.getElementById('moodResponse');
+    resp.innerHTML = '<strong>MindBridge says:</strong> ' + moodMessages[btn.dataset.mood];
+    resp.classList.add('show');
+  }
+</script>
+
+<!-- ─── IBM watsonx Orchestrate Agent Mount Point ─────────────── -->
+<div id="root"></div>
+
+</body>
+</html>
